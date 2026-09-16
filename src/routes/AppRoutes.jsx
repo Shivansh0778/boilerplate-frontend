@@ -6,6 +6,8 @@ import Signup from "../pages/signup/Signup";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Users from "../pages/Users/Users";
 import UserDashboard from "../pages/UserDashboard/UserDashboard";
+import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "../pages/ResetPassword/ResetPassword";
 
 import AdminRoute from "../components/AdminRoute/AdminRoute";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
@@ -17,6 +19,8 @@ function AppRoutes() {
 
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       <Route
         path="/dashboard"

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import AdminLayout from "../../components/AdminLayout/AdminLayout";
 import {
@@ -13,8 +12,6 @@ import EditUser from "../../components/UserModal/EditUser";
 import DeleteUser from "../../components/UserModal/DeleteUser";
 
 function Users() {
-  const token = useSelector((state) => state.auth.token);
-
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [modalType, setModalType] = useState(null);
@@ -22,23 +19,21 @@ function Users() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const data = await getUsers(token);
+        const data = await getUsers();
         setUsers(data.users);
       } catch (error) {
         console.error("Failed to fetch users:", error.message);
       }
     };
 
-    if (token) {
-      fetchUsers();
-    }
-  }, [token]);
+    fetchUsers();
+  }, []);
 
   const handleStatusChange = async (user) => {
     try {
       const newStatus = user.isActive === false;
 
-      await updateUserStatus(token, user._id, newStatus);
+      await updateUserStatus(user._id, newStatus);
 
       setUsers((currentUsers) =>
         currentUsers.map((currentUser) =>
@@ -54,10 +49,7 @@ function Users() {
 
   const handleDeleteUser = async () => {
     try {
-      console.log("Selected user before delete:", selectedUser);
-      console.log("Selected user ID:", selectedUser?._id);
-
-      await deleteUser(token, selectedUser._id);
+      await deleteUser(selectedUser._id);
 
       setUsers((currentUsers) =>
         currentUsers.filter(
@@ -74,8 +66,7 @@ function Users() {
 
   const handleEditUser = async (updatedData) => {
     try {
-      const data = await updateUser(token, selectedUser._id, updatedData);
-      console.log("updated user response", data);
+      const data = await updateUser(selectedUser._id, updatedData);
 
       setUsers((currentUsers) =>
         currentUsers.map((currentUser) =>
@@ -95,6 +86,7 @@ function Users() {
       console.error("Failed to update user:", error.message);
     }
   };
+
   return (
     <AdminLayout>
       <div>
@@ -196,6 +188,7 @@ function Users() {
             </table>
           </div>
         </div>
+
         {selectedUser && modalType === "view" && (
           <ViewUser
             user={selectedUser}
@@ -216,6 +209,7 @@ function Users() {
             onSave={handleEditUser}
           />
         )}
+
         {selectedUser && modalType === "delete" && (
           <DeleteUser
             user={selectedUser}
